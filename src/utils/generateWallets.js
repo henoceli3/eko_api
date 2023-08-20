@@ -55,14 +55,14 @@ const generateWallets = (mnemonic) => {
       publicKey: bitcoinWallet.publicKey,
       privateKey: bitcoinWallet.privateKey,
       address: bitcoinWallet.address,
-    },
+    }
   ];
   return wallets; // exportation des wallets
 };
 
 // pour le deboguage
 // TODO : A surprimer
-const mnemonic = await generateMnemonic();
-console.log({mnemonic}, generateWallets(mnemonic));
+// const mnemonic = await generateMnemonic();
+// console.log({mnemonic}, generateWallets(mnemonic));
 
 export default generateWallets; // exportation de la fonction genereWallets(mnemonic)

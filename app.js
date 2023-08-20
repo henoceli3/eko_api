@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import createWallet  from "./src/routes/v1/wallet/createWallet.js";
 import sequelize  from "./src/db/sequelize.js";
 import router from "./router.js";
 import dotenv from "dotenv";
@@ -20,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //connexion a la base de données
-sequelize.initDb();
+await sequelize.initDb();
 
 
 // routes
