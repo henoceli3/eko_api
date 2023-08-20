@@ -25,7 +25,7 @@ const test = async () => {
   console.log(serializedData);
   try {
     const response = await axios.post(
-      "http://localhost:4000/api/v1/sendEthereum",
+      "https://eko-api.vercel.app/api/v1/sendEthereum",
       serializedData,
       {
         headers: {
