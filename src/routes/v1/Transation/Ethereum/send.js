@@ -67,4 +67,4 @@ const sendCryptoOnEthereum = async (req, res) => {
   }
 };
 
-export default sendCryptoOnEthereum; // Exportation de la fonction sendCryptoOnEthereum
+export default sendCryptoOnEthereum;
