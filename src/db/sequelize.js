@@ -1,6 +1,5 @@
 import Sequelize from "sequelize";
 import initModels from "../models/init-models.js";
-import bcrypt from "bcrypt";
 import mysql2 from "mysql2";
 import dotenv from "dotenv";
 dotenv.config();
