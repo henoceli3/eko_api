@@ -1,6 +1,6 @@
 import express from "express";
 import createWallet from "./src/routes/v1/wallet/createWallet.js";
-import {sendCryptoOnEthereum} from "./src/routes/v1/Transation/Ethereum/Send.js";
+import sendCryptoOnEthereum from "./src/routes/v1/Transation/Ethereum/Send.js";
 import estimateGasPrice from "./src/routes/v1/utils/getEThGasPrice.js";
 import sendCryptoOnSepolia from "./tests/testSepeolia.js";
 // import sendBitcoin from "./src/routes/v1/Transation/Bitcoin/send.js";

@@ -19,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //connexion a la base de données
-await sequelize.initDb();
+sequelize.initDb();
 
 
 // routes
