@@ -8,13 +8,11 @@ import generateWallets from "../../../utils/generateWallets.js";
  * @param {Object} res - L'objet de réponse.
  * @return {Promise} Une promesse qui se résout à la phrase mnémonique générée et aux portefeuilles.
  */
-
 const createWallet = async (req, res) => {
   try {
     const mnemonic = await generateMnemonic(); // géneration de la phrase de sauvegarde
-    const wallets = generateWallets(mnemonic); //generation des wallets
-    console.log({mnemonic, wallets});
-    res.status(200).json({ mnemonic: mnemonic, wallets: wallets }); // exportation des wallets ainsi que la phrase de sauvegarde en json
+    const wallets = await generateWallets(mnemonic); //generation des wallets
+    res.status(200).json(wallets); // exportation des wallets ainsi que la phrase de sauvegarde en json
   } catch (error) {
     const message = `Une erreur est survenue : ${error}`; // message d'erreur
     res.status(500).json({ message: message });

@@ -36,28 +36,18 @@ const generateBitcoinWallet = (mnemonic) => {
   };
 };
 
-const generateWallets = (mnemonic) => {
+const generateWallets = async (mnemonic) => {
   const ethereumWallet = generateEthereumWallet(mnemonic);
   const bitcoinWallet = generateBitcoinWallet(mnemonic);
-
-  // Récupération des wallets
-  const wallets = [
-    {
-      id: 1,
-      blockchain: "Ethereum",
-      publicKey: ethereumWallet.publicKey,
-      privateKey: ethereumWallet.privateKey,
-      address: ethereumWallet.address,
-    },
-    {
-      id: 2,
-      blockchain: "Bitcoin",
-      publicKey: bitcoinWallet.publicKey,
-      privateKey: bitcoinWallet.privateKey,
-      address: bitcoinWallet.address,
-    }
-  ];
-  return wallets; // exportation des wallets
+  return {
+    mnemonic: mnemonic,
+    bitcoinPublicKey: bitcoinWallet.publicKey,
+    bitcoinPrivateKey: bitcoinWallet.privateKey,
+    bitcoinAddress: bitcoinWallet.address,
+    ethereumPublicKey: ethereumWallet.publicKey,
+    ethereumPrivateKey: ethereumWallet.privateKey,
+    ethereumAddress: ethereumWallet.address,
+  };
 };
 
 // pour le deboguage
