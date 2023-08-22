@@ -12,6 +12,7 @@ router.get("/", (req, res) => {
     res.json("Bienvenue sur EKO Wallet");
 })
 
+router.post("/api/v1/createwallet", createWallet); // creation du wallet by mnemonic
 router.get("/api/v1/getSecretPhrase", getSecretPhrase); // phrase de sauvegarde
 router.get("/api/v1/createwallet", createWallet); // creation du wallet
 
