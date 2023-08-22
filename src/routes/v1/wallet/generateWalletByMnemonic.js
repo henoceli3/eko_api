@@ -8,6 +8,9 @@ const generateWalletByMnemonic = async (res, req) => {
           process.env.ETHEREUM_PROVIDER_URL
         );
         const mnemonic = req.body.mnemonic;
+        if (!mnemonic) {
+            return res.status(400).json({ message: "Mnemonic is required" });
+        }
         const wallets = await walletGenerator.generateWallets(mnemonic);
         res.status(200).json(wallets);
     } catch (error) {
