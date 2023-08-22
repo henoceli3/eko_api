@@ -4,6 +4,7 @@ import estimateGasPrice from "./src/routes/v1/utils/getEThGasPrice.js";
 import sendCryptoOnSepolia from "./tests/testSepeolia.js";
 import sendCryptoOnEthereum from "./src/routes/v1/Transation/Ethereum/envoyer.js";
 import getSecretPhrase from "./src/routes/v1/wallet/getSecretPhrase.js";
+import generateWalletByMnemonic from "./src/routes/v1/wallet/generateWalletByMnemonic.js";
 // import sendBitcoin from "./src/routes/v1/Transation/Bitcoin/send.js";
 
 const router = express.Router();
@@ -12,7 +13,7 @@ router.get("/", (req, res) => {
     res.json("Bienvenue sur EKO Wallet");
 })
 
-router.post("/api/v1/createwallet", createWallet); // creation du wallet by mnemonic
+router.post("/api/v1/createwallet", generateWalletByMnemonic); // creation du wallet by mnemonic
 router.get("/api/v1/getSecretPhrase", getSecretPhrase); // phrase de sauvegarde
 router.get("/api/v1/createwallet", createWallet); // creation du wallet
 

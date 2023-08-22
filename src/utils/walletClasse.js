@@ -55,9 +55,4 @@ class WalletGenerator {
   }
 }
 
-// Example usage
-// const walletGenerator = new WalletGenerator(process.env.ETHEREUM_PROVIDER_URL);
-// const mnemonic = await walletGenerator.generateMnemonic(128);
-// console.log({ mnemonic }, walletGenerator.generateWallets(mnemonic));
-
 export default WalletGenerator;
