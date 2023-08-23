@@ -3,7 +3,6 @@ import WalletGenerator from "../../../utils/walletClasse.js";
 dotenv.config();
 
 const generateWalletByMnemonic = async (req, res) => {
-  console.log(req.body);
   try {
     const mnemonic = req.body.mnemonic;
     const walletGenerator = new WalletGenerator(
