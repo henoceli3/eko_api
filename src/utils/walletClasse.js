@@ -3,6 +3,7 @@ import { Wallet } from "ethers";
 import bitcore from "bitcore-lib";
 import Web3 from "web3";
 import dotenv from "dotenv";
+import shortid from "shortid";
 dotenv.config();
 
 class WalletGenerator {
@@ -37,9 +38,12 @@ class WalletGenerator {
   }
 
   async generateWallets(mnemonic) {
+    const uniqueId = shortid.generate();
     const ethereumWallet = this.generateEthereumWallet(mnemonic);
     const bitcoinWallet = this.generateBitcoinWallet(mnemonic);
     return {
+      id: uniqueId,
+      walletName: `Portfeuille ${uniqueId}`,
       mnemonic: mnemonic,
       bitcoinPublicKey: bitcoinWallet.publicKey,
       bitcoinPrivateKey: bitcoinWallet.privateKey,

@@ -1,4 +1,5 @@
 import axios from "axios";
+import shortid from "shortid";
 
 const transaction = {
   "sender_address": "0xCE0a675c3622c4f5f128f880038a3C4c72f06aCE",
@@ -43,4 +44,10 @@ const test = async () => {
   }
 };
 
-test();
+// test();
+
+
+// Génère un nouvel identifiant court unique
+const uniqueId = shortid.generate();
+console.log(uniqueId);
+
