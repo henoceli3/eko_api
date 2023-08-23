@@ -4,19 +4,20 @@ dotenv.config();
 
 const generateWalletByMnemonic = async (req, res) => {
   console.log(req.body);
-    try {
-        const walletGenerator = new WalletGenerator(
-          process.env.ETHEREUM_PROVIDER_URL
-        );
-        if (!mnemonic) {
-          res.status(400).json({ message: "Mnemonic is required" });
-        }
-        const wallets = await walletGenerator.generateWallets(mnemonic);
-        res.status(200).json(wallets);
-    } catch (error) {
-        const message = `Une erreur est survenue : ${error}`;
-        res.status(500).json({ message });
+  try {
+    const mnemonic = req.body.mnemonic;
+    const walletGenerator = new WalletGenerator(
+      process.env.ETHEREUM_PROVIDER_URL
+    );
+    if (!mnemonic) {
+      res.status(400).json({ message: "Mnemonic is required" });
     }
+    const wallets = await walletGenerator.generateWallets(mnemonic);
+    res.status(200).json(wallets);
+  } catch (error) {
+    const message = `Une erreur est survenue : ${error}`;
+    res.status(500).json({ message });
+  }
 };
 
 export default generateWalletByMnemonic;
