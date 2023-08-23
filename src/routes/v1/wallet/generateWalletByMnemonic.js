@@ -3,6 +3,7 @@ import WalletGenerator from "../../../utils/walletClasse.js";
 dotenv.config();
 
 const generateWalletByMnemonic = async (req, res) => {
+  console.log(req.body);
     try {
         const walletGenerator = new WalletGenerator(
           process.env.ETHEREUM_PROVIDER_URL
