@@ -23,10 +23,9 @@ function customStringify(obj) {
 const test = async () => {
   // Utilisation de la fonction de sérialisation personnalisée
   const serializedData = customStringify(transaction);
-  console.log(serializedData);
-  try {
+  // console.log(serializedData);
     const response = await axios.post(
-      "https://eko-api.vercel.app/api/v1/sendEthereum",
+      "https://eko-api.vercel.app/api/v1/testSepolia",
       serializedData,
       {
         headers: {
@@ -35,19 +34,8 @@ const test = async () => {
         },
       }
     );
-    console.log(response.data);
-  } catch (error) {
-    console.error(
-      "Une erreur s'est produite lors de la  transaction : ",
-      error
-    );
-  }
+    console.log(response.data.data);
 };
 
-// test();
-
-
-// Génère un nouvel identifiant court unique
-const uniqueId = shortid.generate();
-console.log(uniqueId);
+test();
 
