@@ -5,22 +5,26 @@ import sendCryptoOnSepolia from "./tests/testSepeolia.js";
 import sendCryptoOnEthereum from "./src/routes/v1/Transation/Ethereum/envoyer.js";
 import getSecretPhrase from "./src/routes/v1/wallet/getSecretPhrase.js";
 import generateWalletByMnemonic from "./src/routes/v1/wallet/generateWalletByMnemonic.js";
-// import sendBitcoin from "./src/routes/v1/Transation/Bitcoin/send.js";
+import getBalanceByaddress from "./src/routes/v1/Transation/Ethereum/getBalance_eth.js";
 
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    res.json("Bienvenue sur EKO Wallet");
-})
+  res.json("Bienvenue sur EKO Wallet");
+});
 
-router.post("/api/v1/createwallet", generateWalletByMnemonic); // creation du wallet by mnemonic
-router.get("/api/v1/getSecretPhrase", getSecretPhrase); // phrase de sauvegarde
-router.get("/api/v1/createwallet", createWallet); // creation du wallet
+// ----------------WALLET----------------------------
+router.post("/api/v1/createwallet", generateWalletByMnemonic);
+router.get("/api/v1/getSecretPhrase", getSecretPhrase);
+router.get("/api/v1/createwallet", createWallet);
 
-router.post("/api/v1/sendEthereum", sendCryptoOnEthereum); // transaction sur ethereum
-router.get("/api/v1/getGasPrice", estimateGasPrice); // estimation du prix de transaction pour ethereum
-router.post("/api/v1/testSepolia", sendCryptoOnSepolia); // transaction sur sepolia  TODO : a supprimer
+// ----------------TRANSACTIONS----------------------------
+router.post("/api/v1/sendEthereum", sendCryptoOnEthereum);
+router.get("/api/v1/getGasPrice", estimateGasPrice);
+router.post("/api/v1/testSepolia", sendCryptoOnSepolia);
 
-// router.post("/api/v1/sendBitcoin", sendBitcoin); 
+// -----------SOLDE------------------------
+router.post("/api/v1/getBalance/contract/eth", getBalanceByaddress);
+
 
 export default router;
