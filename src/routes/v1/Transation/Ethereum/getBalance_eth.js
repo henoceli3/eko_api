@@ -21,7 +21,7 @@ const getBalanceByaddress = async (req, res) => {
 
     const tokenContract = new web3.eth.Contract(
       tokenContractABI,
-      tokenContractAddress
+      tokenContractAddress 
     );
 
     const balance = await tokenContract.methods.balanceOf(userAddress).call();
