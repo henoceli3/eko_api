@@ -27,6 +27,7 @@ const getBalanceByaddress = async (req, res) => {
     const balance = await tokenContract.methods.balanceOf(userAddress).call();
     res.status(200).json({ balance });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: `Une erreur est survenue : ${error}` });
   }
 };
