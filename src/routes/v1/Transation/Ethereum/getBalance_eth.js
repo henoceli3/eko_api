@@ -3,15 +3,15 @@ import abi from "../../../../utils/ethersc_Abi.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-const web3 = new Web3(
-  "https://eth-mainnet.g.alchemy.com/v2/6mn2xblL6xvsbFUylnJGBkiaypKd4yl6"
-);
-const getBalanceByaddress = async (req, res) => {
+const getBalanceETH = async (req, res) => {
   try {
+    const web3 = new Web3(
+      "https://eth-mainnet.g.alchemy.com/v2/6mn2xblL6xvsbFUylnJGBkiaypKd4yl6"
+    );
     const { tokenContractAddress, userAddress } = req.body;
     if (!tokenContractAddress || !userAddress) {
       return res.status(400).json({
-        message: "tokenContractAddress and userAddress are required",
+        message: "tokenContractAddress et userAddress sont requis",
       });
     }
     const tokenContractABI = abi;
@@ -33,4 +33,4 @@ const getBalanceByaddress = async (req, res) => {
   }
 };
 
-export default getBalanceByaddress;
+export default getBalanceETH;

@@ -1,6 +1,7 @@
 import Web3 from "web3";
 
-const getBalanceETHNative = async (req, res) => {
+
+const getBlanceBTCNAtive = async (req, res) => {
   try {
     const web3 = new Web3(
       "https://eth-mainnet.g.alchemy.com/v2/6mn2xblL6xvsbFUylnJGBkiaypKd4yl6"
@@ -20,4 +21,4 @@ const getBalanceETHNative = async (req, res) => {
   }
 };
 
-export default getBalanceETHNative;
+export default getBlanceBTCNAtive;
