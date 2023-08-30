@@ -15,6 +15,7 @@ const generateWalletByMnemonic = async (req, res) => {
     res.status(200).json(wallets);
   } catch (error) {
     const message = `Une erreur est survenue : ${error}`;
+    console.log(message);
     res.status(500).json({ message });
   }
 };
