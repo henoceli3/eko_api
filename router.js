@@ -32,7 +32,7 @@ router.post("/api/v1/getHistorique/contract/eth", getTransactionHistorique_eth);
 // -----------SOLDE------------------------
 router.post("/api/v1/getBalance/eth_native", getBalanceETHNative);
 router.post("/api/v1/getBalance/eth", getBalanceETH);
-router.post("/api/v1/getBalance/btc", getBlanceBTCNAtive);
+router.post("/api/v1/getBalance/btc_native", getBlanceBTCNAtive);
 
 
 export default router;
