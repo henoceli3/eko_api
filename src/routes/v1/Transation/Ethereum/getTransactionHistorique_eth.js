@@ -2,9 +2,9 @@ import { Alchemy, Network } from "alchemy-sdk";
 const getTransactionHistorique_eth = async (req, res) => {
   try {
     const { userAddress, tokenContractAddress } = req.body;
-    if (!userAddress || !tokenContractAddress) {
+    if (!userAddress) {
       return res.status(400).json({
-        message: "userAddress and tokenContractAddress are required",
+        message: "userAddress est requit",
       });
     }
     const config = {
@@ -13,14 +13,18 @@ const getTransactionHistorique_eth = async (req, res) => {
     };
     const alchemy = new Alchemy(config);
 
-    const data = await alchemy.core.getAssetTransfers({
+    const data_from = await alchemy.core.getAssetTransfers({
       fromBlock: "0x0",
-      fromAddress: "0xCE0a675c3622c4f5f128f880038a3C4c72f06aCE",
-      toAddress: "0x7Bf6DB9a47170317D6383db03aF6e40B0e187351",
+      fromAddress: userAddress,
+      category: ["external", "internal", "erc20", "erc721", "erc1155"],
+    });
+    const data_to = await alchemy.core.getAssetTransfers({
+      fromBlock: "0x0",
+      toAddress: userAddress,
       category: ["external", "internal", "erc20", "erc721", "erc1155"],
     });
 
-    const historique = data.transfers.map((transaction) => {
+    const historique_from = data_to.transfers.map((transaction) => {
       return {
         from: transaction.from,
         to: transaction.to,
@@ -28,6 +32,16 @@ const getTransactionHistorique_eth = async (req, res) => {
         asset: transaction.asset,
       };
     });
+    const historique_to = data_from.transfers.map((transaction) => {
+      return {
+        from: transaction.from,
+        to: transaction.to,
+        value: transaction.value,
+        asset: transaction.asset,
+      };
+    });
+
+    const historique = historique_from.concat(historique_to);
 
     res.status(200).json(historique);
   } catch (error) {

@@ -27,7 +27,7 @@ router.get("/api/v1/getGasPrice", estimateGasPrice);
 router.post("/api/v1/testSepolia", sendCryptoOnSepolia);
 
 // ----------------HISTORIQUE----------------------------
-router.post("/api/v1/getHistorique/contract/eth", getTransactionHistorique_eth);
+router.post("/api/v1/getHistorique/eth", getTransactionHistorique_eth);
 
 // -----------SOLDE------------------------
 router.post("/api/v1/getBalance/eth_native", getBalanceETHNative);
