@@ -1,40 +1,21 @@
 import axios from "axios";
-import shortid from "shortid";
 
 const transaction = {
-  "sender_address": "0xCE0a675c3622c4f5f128f880038a3C4c72f06aCE",
-  "destination_address": "0x7Bf6DB9a47170317D6383db03aF6e40B0e187351",
-  "amount": "0.0000000000000001",
-  "private_key":
-    "0xe0c84d4b6665c86a11764df2e16cf2e938787349e40ec0d36a2c42b46b0ebac9",
-  "gasPriceGwei": "34.112934711",
+  tokenContractAddress: "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce",
+  userAddress: "0xC9cE5ac72eF382326f4CAeB04F643D4A22448824",
 };
 
-function customStringify(obj) {
-  return JSON.stringify(obj, (key, value) => {
-    // Si la valeur est un BigInt, convertissez-la en chaîne de caractères
-    if (typeof value === "bigint") {
-      return value.toString();
-    }
-    return value;
-  });
-}
-
 const test = async () => {
-  // Utilisation de la fonction de sérialisation personnalisée
-  const serializedData = customStringify(transaction);
-  // console.log(serializedData);
-    const response = await axios.post(
-      "https://eko-api.vercel.app/api/v1/testSepolia",
-      serializedData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log(response.data.data);
+  // console.log(transaction);
+  const response = await axios.post(
+    "http://localhost:4000/api/v1/getBalance/contract/eth",
+    transaction,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };
 
 test();
-
