@@ -9,9 +9,14 @@ const getBalanceETH = async (req, res) => {
       "https://eth-mainnet.g.alchemy.com/v2/6mn2xblL6xvsbFUylnJGBkiaypKd4yl6"
     );
     const { tokenContractAddress, userAddress } = req.body;
-    if (!tokenContractAddress || !userAddress) {
+    if (!tokenContractAddress) {
       return res.status(400).json({
-        message: "tokenContractAddress et userAddress sont requis",
+        message: "tokenContractAddress est requit",
+      });
+    }
+    if (!userAddress) {
+      return res.status(400).json({
+        message: "userAddress est requit",
       });
     }
     const tokenContractABI = abi;
