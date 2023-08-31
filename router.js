@@ -28,11 +28,11 @@ router.post("/api/v1/testSepolia", sendCryptoOnSepolia);
 
 // ----------------HISTORIQUE----------------------------
 router.post("/api/v1/getHistorique/eth", getTransactionHistorique_eth);
-
+router.post("/api/v1/getHistorique/eth_native", getTransactionHistorique_eth);
+router.post("/api/v1/getHistorique/btc_native", getTransactionHistorique_eth);
 // -----------SOLDE------------------------
 router.post("/api/v1/getBalance/eth_native", getBalanceETHNative);
 router.post("/api/v1/getBalance/eth", getBalanceETH);
 router.post("/api/v1/getBalance/btc_native", getBlanceBTCNAtive);
-
 
 export default router;
