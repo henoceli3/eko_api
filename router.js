@@ -1,11 +1,8 @@
 import express from "express";
-import createWallet from "./src/routes/v1/wallet/createWallet.js";
 import sendCryptoOnSepolia from "./tests/testSepeolia.js";
-import getSecretPhrase from "./src/routes/v1/wallet/getSecretPhrase.js";
-import generateWalletByMnemonic from "./src/routes/v1/wallet/generateWalletByMnemonic.js";
 import getBlanceBTCNAtive from "./src/routes/v1/Transation/Bitcoin/getBalance.js";
 import ethereumClasse from "./src/routes/v1/Transation/Ethereum/Ethereum_Classe.js";
-import walletGenerator from "./src/utils/walletClasse.js";
+import walletGenerator from "./src/routes/v1/wallet/walletClasse.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
