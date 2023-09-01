@@ -98,7 +98,7 @@ class Ethereum_Classe {
         });
       }
       const balanceWei = await this.web3.eth.getBalance(userAddress);
-      const balanceEther = web3.utils.fromWei(balanceWei, "ether");
+      const balanceEther = this.web3.utils.fromWei(balanceWei, "ether");
       return res.status(200).json({ solde: balanceEther });
     } catch (error) {
       const errorMessage = `Une erreur est survenue : ${error}`;
