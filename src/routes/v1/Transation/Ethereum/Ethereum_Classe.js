@@ -1,11 +1,11 @@
 import Web3 from "web3";
-import abi from "../../../../utils/ethersc_Abi";
+import abi from "../../../../utils/ethersc_Abi.js";
 import { Alchemy, Network, Wallet, Utils } from "alchemy-sdk";
 
 class Ethereum_Classe {
   constructor(apikey) {
     this.provider = `https://eth-mainnet.g.alchemy.com/v2/${apikey}`;
-    this.web3 = new Web3(provider);
+    this.web3 = new Web3(this.provider);
     this.alchemy = new Alchemy({
       apiKey: apikey,
       network: Network.ETH_SEPOLIA, //TODO Change this to the network you want to use
