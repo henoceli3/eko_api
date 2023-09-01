@@ -1,15 +1,12 @@
 import bip39 from "bip39";
 import { Wallet } from "ethers";
 import bitcore from "bitcore-lib";
-import Web3 from "web3";
 import dotenv from "dotenv";
 import shortid from "shortid";
 dotenv.config();
 
 class WalletGenerator {
-  constructor(ethereumProviderUrl) {
-    this.web3 = new Web3(ethereumProviderUrl);
-  }
+  constructor() {}
 
   generateEthereumWallet(mnemonic) {
     const ethereumWallet = Wallet.fromPhrase(mnemonic);
@@ -57,6 +54,42 @@ class WalletGenerator {
   async generateMnemonic(bits) {
     return bip39.generateMnemonic(bits);
   }
-}
 
-export default WalletGenerator;
+  async generateWalletsFromMnemonic(req, res) {
+    try {
+      const { mnemonic } = req.body;
+      if (!mnemonic) {
+        res.status(400).json({ message: "mnemonic est requit" });
+      }
+      const wallets = await this.generateWallets(mnemonic);
+      res.status(200).json(wallets);
+    } catch (error) {
+      const message = `Une erreur est survenue : ${error}`;
+      console.log(message);
+      res.status(500).json({ message });
+    }
+  }
+
+  async getMnemonic(req, res) {
+    try {
+      const mnemonic = await this.generateMnemonic(128);
+      res.status(200).json({ mnemonic });
+    } catch (error) {
+      const message = `Une erreur est survenue : ${error}`;
+      res.status(500).json({ message });
+    }
+  }
+
+  async generaleWallet(req, res) {
+    try {
+      const mnemonic = await this.generateMnemonic(128);
+      const wallets = await this.generateWallets(mnemonic);
+      res.status(200).json(wallets);
+    } catch (error) {
+      const message = `Une erreur est survenue : ${error}`;
+      res.status(500).json({ message: message });
+    }
+  }
+}
+const walletGenerator = new WalletGenerator();
+export default walletGenerator;

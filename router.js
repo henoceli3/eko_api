@@ -5,6 +5,7 @@ import getSecretPhrase from "./src/routes/v1/wallet/getSecretPhrase.js";
 import generateWalletByMnemonic from "./src/routes/v1/wallet/generateWalletByMnemonic.js";
 import getBlanceBTCNAtive from "./src/routes/v1/Transation/Bitcoin/getBalance.js";
 import ethereumClasse from "./src/routes/v1/Transation/Ethereum/Ethereum_Classe.js";
+import walletGenerator from "./src/utils/walletClasse.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -12,9 +13,15 @@ router.get("/", (req, res) => {
 });
 
 // ------------------------------------------WALLET----------------------------
-router.post("/api/v1/createwallet", generateWalletByMnemonic);
-router.get("/api/v1/getSecretPhrase", getSecretPhrase);
-router.get("/api/v1/createwallet", createWallet);
+router.get("/api/v1/getSecretPhrase", (req, res) => {
+  walletGenerator.getMnemonic(req, res);
+});
+router.get("/api/v1/createwallet", (req, res) => {
+  walletGenerator.generaleWallet(req, res);
+});
+router.post("/api/v1/createwallet", (req, res) => {
+  walletGenerator.generateWalletsFromMnemonic(req, res);
+});
 
 // -------------------------------------------TRANSACTIONS----------------------------
 router.post("/api/v1/sendEthereum", (req, res) => {
