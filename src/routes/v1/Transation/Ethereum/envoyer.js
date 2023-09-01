@@ -24,7 +24,7 @@ const sendCryptoOnEthereum = async (req, res) => {
   try {
     // Extration les données de la requête
     const {
-      sender_address, // Adresse de l'envoyeur
+      sender_address, // Adresse de l'expéditeur
       destination_address, // Adresse du destinataire
       private_key, // Clé privée
       amount, // Montant envoyé
