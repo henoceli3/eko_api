@@ -4,12 +4,17 @@ import { Alchemy, Network, Wallet, Utils } from "alchemy-sdk";
 
 class Ethereum_Classe {
   constructor(apikey) {
-    this.provider = `https://eth-mainnet.g.alchemy.com/v2/${apikey}`;
+    this.apikey = apikey;
+    this.provider = `https://eth-mainnet.g.alchemy.com/v2/${this.apikey}`;
     this.web3 = new Web3(this.provider);
     this.alchemy = new Alchemy({
-      apiKey: apikey,
+      apiKey: this.apikey,
       network: Network.ETH_SEPOLIA, //TODO Change this to the network you want to use
     });
+  }
+
+  async test() {
+    console.log(await this.web3.eth.getGasPrice());
   }
 
   async getEthereumGasPrice(req, res) {
@@ -22,11 +27,12 @@ class Ethereum_Classe {
       );
 
       res.status(200).json({
-        gasPriceWei: gasPriceWei,
-        gasPriceGwei: gasPriceGwei,
-        gasPriceEthEquivalent: gasPriceEthEquivalent,
+        gasPriceWei: gasPriceWei.toString(),
+        gasPriceGwei: gasPriceGwei.toString(),
+        gasPriceEthEquivalent: gasPriceEthEquivalent.toString(),
       });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: `Une erreur est survenue : ${error}` });
     }
   }
@@ -84,6 +90,7 @@ class Ethereum_Classe {
 
       return res.status(200).json({ solde: balanceString });
     } catch (error) {
+      console.log(error);
       const errorMessage = `Une erreur est survenue : ${error}`;
       return res.status(500).json({ message: errorMessage });
     }
@@ -152,5 +159,7 @@ class Ethereum_Classe {
     }
   }
 }
+const apiKey = "6mn2xblL6xvsbFUylnJGBkiaypKd4yl6";
+const ethereumClasse = new Ethereum_Classe(apiKey);
 
-export default Ethereum_Classe;
+export default ethereumClasse;

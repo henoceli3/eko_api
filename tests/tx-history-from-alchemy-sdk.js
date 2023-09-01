@@ -1,5 +1,6 @@
 import { Alchemy, Network, Wallet, Utils } from "alchemy-sdk";
 import { config } from "dotenv";
+import ethereumClasse from "../src/routes/v1/Transation/Ethereum/Ethereum_Classe.js";
 
 config();
 const { API_KEY, PRIVATE_KEY } = {
@@ -38,4 +39,5 @@ async function main() {
   console.log("Sent transaction", tx);
 }
 
-main();
+// main();
+ethereumClasse.test();
