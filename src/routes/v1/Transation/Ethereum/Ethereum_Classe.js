@@ -9,7 +9,7 @@ class Ethereum_Classe {
     this.web3 = new Web3(this.provider);
     this.alchemy = new Alchemy({
       apiKey: this.apikey,
-      network: Network.ETH_SEPOLIA, //TODO Change this to the network you want to use
+      network: Network.ETH_SEPOLIA, //TODO: Change this to the network you want to use
     });
   }
 
@@ -53,11 +53,76 @@ class Ethereum_Classe {
         maxFeePerGas: Utils.parseUnits("20", "gwei"),
         nonce: nonce,
         type: 2,
-        chainId: 11155111, //TODO change this to the network id
+        chainId: 11155111, //TODO: change this to the network id
       };
       const rawTransaction = await wallet.signTransaction(transaction);
       const tx = await this.alchemy.core.sendTransaction(rawTransaction);
-      return res.status(200).json(tx);
+      return res.status(200).json({ transactionHash: tx.hash });
+    } catch (error) {
+      const errorMessage = `Une erreur est survenue : ${error}`;
+      return res.status(500).json({ message: errorMessage });
+    }
+  }
+
+  async sendToken(req, res) {
+    try {
+      const { privateKey, tokenContractAddress, destinationAddress, amount } =
+        req.body;
+      if (
+        !privateKey ||
+        !tokenContractAddress ||
+        !destinationAddress ||
+        !amount
+      ) {
+        return res.status(400).json({
+          message: "Toutes les informations requises doivent être fournies.",
+        });
+      }
+
+      const wallet = new Wallet(privateKey);
+      const tokenContractABI = abi;
+      const tokenContract = new this.web3.eth.Contract(
+        tokenContractABI,
+        tokenContractAddress
+      );
+      const senderBalance = await tokenContract.methods
+        .balanceOf(wallet.address)
+        .call();
+      const amountInWei = this.web3.utils.toWei(amount, "ether");
+
+      if (senderBalance < amount) {
+        return res.status(400).json({
+          message: "Solde insuffisant dans le portefeuille expéditeur.",
+        });
+      }
+      const transferData = tokenContract.methods
+        .transfer(destinationAddress, amountInWei)
+        .encodeABI();
+
+      const nonce = await this.alchemy.core.getTransactionCount(
+        wallet.address,
+        "latest"
+      );
+      const gasPriceHex = this.web3.utils.toHex("21000");
+      const latestBlock = await this.web3.eth.getBlock("latest");
+      const maxGasLimit = latestBlock.gasLimit;
+
+
+      const gasLimit = Math.min(parseInt(maxGasLimit), 60000);
+      const transaction = {
+        nonce: nonce,
+        from: wallet.address,
+        to: tokenContractAddress,
+        gasPrice: gasPriceHex,
+        gasLimit: this.web3.utils.toHex(gasLimit),
+        data: transferData,
+        chainId: 11155111, //TODO: Change this to the correct network ID
+      };
+
+      const signedTransaction = await wallet.signTransaction(transaction);
+      const tx = await this.alchemy.core.sendTransaction(signedTransaction);
+
+      return res.status(200).json({ transactionHash: tx.hash });
     } catch (error) {
       const errorMessage = `Une erreur est survenue : ${error}`;
       return res.status(500).json({ message: errorMessage });

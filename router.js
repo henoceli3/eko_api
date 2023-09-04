@@ -21,8 +21,11 @@ router.post("/api/v1/createwallet", (req, res) => {
 });
 
 // -------------------------------------------TRANSACTIONS----------------------------
-router.post("/api/v1/sendEthereum", (req, res) => {
+router.post("/api/v1/send/eth_native", (req, res) => {
   ethereumClasse.sendEthereum(req, res);
+});
+router.post("/api/v1/send/eth", (req, res) => {
+  ethereumClasse.sendToken(req, res);
 });
 router.get("/api/v1/getGasPrice", (req, res) => {
   ethereumClasse.getEthereumGasPrice(req, res);
