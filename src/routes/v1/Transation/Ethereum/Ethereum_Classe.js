@@ -103,7 +103,6 @@ class Ethereum_Classe {
       const latestBlock = await this.web3.eth.getBlock("latest");
       const maxGasLimit = latestBlock.gasLimit;
 
-
       const gasLimit = Math.min(parseInt(maxGasLimit), 60000);
       const transaction = {
         nonce: nonce,
@@ -138,18 +137,16 @@ class Ethereum_Classe {
           message: "userAddress est requit",
         });
       }
-      const tokenContractABI = abi;
 
-      const tokenContract = new this.web3.eth.Contract(
-        tokenContractABI,
-        tokenContractAddress
+      const response = await this.alchemy.core.getTokenBalances(userAddress, [
+        tokenContractAddress,
+      ]);
+
+      const balanceString = response.tokenBalances.map((token) =>
+        Utils.formatUnits(token.tokenBalance, "ether")
       );
 
-      const balance = await tokenContract.methods.balanceOf(userAddress).call();
-
-      const balanceString = balance.toString();
-
-      return res.status(200).json({ solde: balanceString });
+      return res.status(200).json({ solde: balanceString[0] });
     } catch (error) {
       console.log(error);
       const errorMessage = `Une erreur est survenue : ${error}`;

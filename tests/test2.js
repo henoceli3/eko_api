@@ -11,14 +11,21 @@ const config = {
 const alchemy = new Alchemy(config);
 
 const main = async () => {
-  // This response fetches the balance of the given address in the paramter as of the provided block.
-  let response = await alchemy.core.getBalance(
-    "0xCE0a675c3622c4f5f128f880038a3C4c72f06aCE",
-    "latest"
-  );
+  //Initialize variables for the parameters
+  let vitalikAddress = "0xCE0a675c3622c4f5f128f880038a3C4c72f06aCE";
+  let usdcContract = "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce";
+
+  //Call the method to return the token balances for this address
+  let response = await alchemy.core.getTokenBalances(vitalikAddress, [
+    usdcContract,
+  ]);
 
   //Logging the response to the console
-  console.log(Utils.formatUnits(response._hex, "ether"));
+  console.log(
+    response.tokenBalances.map((tokenBalance) =>
+      Utils.formatUnits(tokenBalance.tokenBalance, "ether")
+    )
+  );
 };
 
 main();
