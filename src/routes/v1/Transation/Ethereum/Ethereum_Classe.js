@@ -13,10 +13,6 @@ class Ethereum_Classe {
     });
   }
 
-  async test() {
-    console.log(await this.web3.eth.getGasPrice());
-  }
-
   async getEthereumGasPrice(req, res) {
     try {
       const gasPriceWei = await this.web3.eth.getGasPrice();
@@ -169,8 +165,8 @@ class Ethereum_Classe {
           message: "userAddress est requit",
         });
       }
-      const balanceWei = await this.web3.eth.getBalance(userAddress);
-      const balanceEther = this.web3.utils.fromWei(balanceWei, "ether");
+      const balanceHex = await this.alchemy.core.getBalance(userAddress);
+      const balanceEther = Utils.formatUnits(balanceHex, "ether");
       return res.status(200).json({ solde: balanceEther });
     } catch (error) {
       const errorMessage = `Une erreur est survenue : ${error}`;

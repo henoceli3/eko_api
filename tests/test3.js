@@ -10,7 +10,7 @@ const test = async () => {
     const tokenContractAddress = "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce";
 
     const response = await axios.post(
-      "http://localhost:4000/api/v1/sendEth/eth",
+      "http://localhost:4000/api/v1/send/eth",
       {
         privateKey,
         destinationAddress,
