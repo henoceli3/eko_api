@@ -174,16 +174,17 @@ class Ethereum_Classe {
   async getAllBalances(req, res) {
     try {
       var tokenTable = [{}];
-      const { userAddress } = req.body;
+      var userAddress = {};
+      userAddress = req.body.userAddress;
       tokenTable = req.body.tokenTable;
       const balancesTable = tokenTable.map(async (token) => {
         if (token.chainId === "eth_native") {
-          const balanceHex = await this.alchemy.core.getBalance(userAddress);
+          const balanceHex = await this.alchemy.core.getBalance(userAddress.eth);
           const balanceEther = Utils.formatUnits(balanceHex, "ether");
           return balanceEther;
         } else if (token.chainId === "eth") {
           const balanceHex = await this.alchemy.core.getTokenBalances(
-            userAddress,
+            userAddress.eth,
             [token.address_contract]
           );
           const balanceEther = balanceHex.tokenBalances.map((token) =>
