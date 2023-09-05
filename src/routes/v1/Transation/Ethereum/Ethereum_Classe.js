@@ -171,6 +171,38 @@ class Ethereum_Classe {
     }
   }
 
+  async getAllBalances(req, res) {
+    try {
+      var tokenTable = [{}];
+      const { userAddress } = req.body;
+      tokenTable = req.body.tokenTable;
+      const balancesTable = tokenTable.map(async (token) => {
+        if (token.chainId === "eth_native") {
+          const balanceHex = await this.alchemy.core.getBalance(userAddress);
+          const balanceEther = Utils.formatUnits(balanceHex, "ether");
+          return balanceEther;
+        } else if (token.chainId === "eth") {
+          const balanceHex = await this.alchemy.core.getTokenBalances(
+            userAddress,
+            [token.address_contract]
+          );
+          const balanceEther = balanceHex.tokenBalances.map((token) =>
+            Utils.formatUnits(token.tokenBalance, "ether")
+          );
+          return balanceEther[0];
+        } else {
+          return "0";
+        }
+      });
+      const balances = await Promise.all(balancesTable);
+      return res.status(200).json({ solde: balances });
+    } catch (error) {
+      const message = `Une erreur est survenue: ${error}`;
+      console.log(error);
+      res.status(500).json({ message });
+    }
+  }
+
   async getHistotique(req, res) {
     try {
       const { userAddress, tokenContractAddress } = req.body;

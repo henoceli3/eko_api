@@ -53,4 +53,8 @@ router.post("/api/v1/getBalance/eth", (req, res) => {
 });
 router.post("/api/v1/getBalance/btc_native", getBlanceBTCNAtive);
 
+router.post("/api/v1/getAllBalance", (req, res) => {
+  ethereumClasse.getAllBalances(req, res);
+})
+
 export default router;
