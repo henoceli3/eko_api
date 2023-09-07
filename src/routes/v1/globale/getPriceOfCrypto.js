@@ -23,7 +23,7 @@ class Global {
         [cryptoSymbol]: cryptoData[cryptoSymbol][devise],
       }));
 
-      return res.status(200).json(cryptoObjects);
+      return res.status(200).json({ price: cryptoObjects });
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;
       console.log(message);
