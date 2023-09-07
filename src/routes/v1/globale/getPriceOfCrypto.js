@@ -18,9 +18,11 @@ class Global {
 
       const cryptoData = response.data;
 
-      // Créez un tableau d'objets à partir de la réponse de l'API
-      const cryptoObjects = Object.keys(cryptoData).map((cryptoSymbol) => ({
-        [cryptoSymbol]: cryptoData[cryptoSymbol][devise],
+      // Créez un tableau d'objets pour toutes les cryptos demandées
+      const cryptoObjects = cryptosTable.map((cryptoSymbol) => ({
+        [cryptoSymbol]: cryptoData[cryptoSymbol]
+          ? cryptoData[cryptoSymbol][devise]
+          : 0,
       }));
 
       return res.status(200).json({ price: cryptoObjects });
