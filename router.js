@@ -3,7 +3,7 @@ import sendCryptoOnSepolia from "./tests/testSepeolia.js";
 import getBlanceBTCNAtive from "./src/routes/v1/Transation/Bitcoin/getBalance.js";
 import ethereumClasse from "./src/routes/v1/Transation/Ethereum/Ethereum_Classe.js";
 import walletGenerator from "./src/routes/v1/wallet/walletClasse.js";
-import global from "./src/routes/v1/globale/getPriceOfCrypto.js";
+import global from "./src/routes/v1/globale/globalClasse.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -61,6 +61,10 @@ router.post("/api/v1/getAllBalance", (req, res) => {
 //----------------------------------globale--------------------------------
 router.post("/api/v1/getPrice", (req, res) => {
   global.getPriceOfCrypto(req, res);
+})
+
+router.get("/api/v1/getNews", (req, res) => {
+  global.getNews(req, res);
 })
 
 export default router;

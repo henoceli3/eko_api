@@ -32,6 +32,27 @@ class Global {
       res.status(500).json({ message });
     }
   }
+  async getNews(req, res) {
+    try {
+      const response = await axios.get(
+        "https://min-api.cryptocompare.com/data/v2/news/?lang=EN"
+      );
+      const newsBrt = response.data;
+      const news = newsBrt.Data.map((news) => ({
+        title: news.title,
+        url: news.url,
+        image: news.imageurl,
+        body : news.body,
+        source : news.source,
+        tags : news.tags.trim().split("|"),
+      }));
+      return res.status(200).json(news);
+    } catch (error) {
+      const message = `Une erreur est survenue : ${error}`;
+      console.log(message);
+      res.status(500).json({ message });
+    }
+  }
 }
 
 const global = new Global();
