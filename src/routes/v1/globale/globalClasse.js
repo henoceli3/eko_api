@@ -11,19 +11,46 @@ class Global {
       const cryptosTable = req.body.cryptosTable;
       const devise = req.body.devise;
 
-      const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${cryptosTable.join(
+      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cryptosTable.join(
         ","
       )}&tsyms=${devise}`;
+
       const response = await axios.get(url);
 
       const cryptoData = response.data;
 
-      // Créez un tableau d'objets pour toutes les cryptos demandées
-      const cryptoObjects = cryptosTable.map((cryptoSymbol) => ({
-        [cryptoSymbol]: cryptoData[cryptoSymbol]
-          ? cryptoData[cryptoSymbol][devise]
-          : 0,
-      }));
+      // Extract detailed information about cryptocurrencies
+      const cryptoObjects = cryptosTable.map((cryptoSymbol) => {
+        if (
+          cryptoData.RAW &&
+          cryptoData.RAW[cryptoSymbol] &&
+          cryptoData.RAW[cryptoSymbol][devise]
+        ) {
+          const rawInfo = cryptoData.RAW[cryptoSymbol][devise];
+          const displayInfo = cryptoData.DISPLAY[cryptoSymbol][devise];
+
+          // Calculate the percentage change and format it to two decimal places
+          const percentChange = parseFloat(rawInfo.CHANGEPCT24HOUR).toFixed(2);
+
+          return {
+            symbol: cryptoSymbol,
+            name: displayInfo.FROMSYMBOL,
+            price: rawInfo.PRICE,
+            marketCap: rawInfo.MKTCAP,
+            percentChange: percentChange,
+            // Add more properties as needed
+          };
+        } else {
+          return {
+            symbol: cryptoSymbol,
+            name: "",
+            price: 0,
+            marketCap: 0,
+            percentChange: 0.0, // Default to two decimal places
+            // Add more default properties as needed
+          };
+        }
+      });
 
       return res.status(200).json({ price: cryptoObjects });
     } catch (error) {
@@ -42,9 +69,9 @@ class Global {
         title: news.title,
         url: news.url,
         image: news.imageurl,
-        body : news.body,
-        source : news.source,
-        tags : news.tags.trim().split("|"),
+        body: news.body,
+        source: news.source,
+        tags: news.tags.trim().split("|"),
       }));
       return res.status(200).json(news);
     } catch (error) {
