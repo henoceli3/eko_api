@@ -56,15 +56,19 @@ router.post("/api/v1/getBalance/btc_native", getBlanceBTCNAtive);
 
 router.post("/api/v1/getAllBalance", (req, res) => {
   ethereumClasse.getAllBalances(req, res);
-})
+});
 
 //----------------------------------globale--------------------------------
 router.post("/api/v1/getPrice", (req, res) => {
   global.getPriceOfCrypto(req, res);
-})
+});
 
 router.get("/api/v1/getNews", (req, res) => {
   global.getNews(req, res);
-})
+});
 
+
+router.get("/api/v1/getTopList", (req, res) => {
+  global.getTopList(req, res);
+});
 export default router;
