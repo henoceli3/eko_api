@@ -96,7 +96,7 @@ class Global {
 
   async termsUse(req, res) {
     try {
-      const {termsOfUse, privacyPolicy, uid} = req.body;
+      const { politiqueGenerals, confidentialite, uuid } = req.body;
       return res.status(200).json({message: "ok"});
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;
