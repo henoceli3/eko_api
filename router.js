@@ -71,4 +71,10 @@ router.get("/api/v1/getNews", (req, res) => {
 router.get("/api/v1/getTopList", (req, res) => {
   global.getTopList(req, res);
 });
+
+router.post("/api/v1/termsUse", (req, res) => {
+  global.termsUse(req, res);
+})
+
+
 export default router;
