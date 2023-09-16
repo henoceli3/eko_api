@@ -49,7 +49,7 @@ class Ethereum_Classe {
         maxFeePerGas: Utils.parseUnits("20", "gwei"),
         nonce: nonce,
         type: 2,
-        chainId: 11155111, //TODO: change this to the network id
+        chainId: 11155111, //TODO: change this to the network id 1
       };
       const rawTransaction = await wallet.signTransaction(transaction);
       const tx = await this.alchemy.core.sendTransaction(rawTransaction);
