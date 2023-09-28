@@ -2,7 +2,7 @@ import bip39 from "bip39";
 import { Wallet } from "ethers";
 import bitcore from "bitcore-lib";
 import dotenv from "dotenv";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 dotenv.config();
 
 class WalletGenerator {
@@ -35,7 +35,7 @@ class WalletGenerator {
   }
 
   async generateWallets(mnemonic) {
-    const uniqueId = uuidv4();
+    const uniqueId = nanoid(9);
     const ethereumWallet = this.generateEthereumWallet(mnemonic);
     const bitcoinWallet = this.generateBitcoinWallet(mnemonic);
     return {
