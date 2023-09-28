@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import sequelize  from "./src/db/sequelize.js";
+// import sequelize  from "./src/db/sequelize.js";
 import router from "./router.js";
 import dotenv from "dotenv";
 dotenv.config();
