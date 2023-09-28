@@ -179,7 +179,9 @@ class Ethereum_Classe {
       tokenTable = req.body.tokenTable;
       const balancesTable = tokenTable.map(async (token) => {
         if (token.chainId === "eth_native") {
-          const balanceHex = await this.alchemy.core.getBalance(userAddress.eth);
+          const balanceHex = await this.alchemy.core.getBalance(
+            userAddress.eth
+          );
           const balanceEther = Utils.formatUnits(balanceHex, "ether");
           return balanceEther;
         } else if (token.chainId === "eth") {
@@ -204,12 +206,17 @@ class Ethereum_Classe {
     }
   }
 
-  async getHistotique(req, res) {
+  async getHistorique(req, res) {
     try {
-      const { userAddress, tokenContractAddress } = req.body;
+      const { userAddress, asset } = req.body;
       if (!userAddress) {
         return res.status(400).json({
           message: "userAddress est requit",
+        });
+      }
+      if (!asset) {
+        return res.status(400).json({
+          message: "asset est requit",
         });
       }
 
@@ -224,22 +231,26 @@ class Ethereum_Classe {
         category: ["external", "internal", "erc20", "erc721", "erc1155"],
       });
 
-      const historique_from = data_to.transfers.map((transaction) => {
-        return {
-          from: transaction.from,
-          to: transaction.to,
-          value: transaction.value,
-          asset: transaction.asset,
-        };
-      });
-      const historique_to = data_from.transfers.map((transaction) => {
-        return {
-          from: transaction.from,
-          to: transaction.to,
-          value: transaction.value,
-          asset: transaction.asset,
-        };
-      });
+      const historique_from = data_to.transfers
+        .filter((transaction) => transaction.asset === asset)
+        .map((transaction) => {
+          return {
+            from: transaction.from,
+            to: transaction.to,
+            value: transaction.value,
+            asset: transaction.asset,
+          };
+        });
+      const historique_to = data_from.transfers
+        .filter((transaction) => transaction.asset === asset)
+        .map((transaction) => {
+          return {
+            from: transaction.from,
+            to: transaction.to,
+            value: transaction.value,
+            asset: transaction.asset,
+          };
+        });
 
       const historique = historique_from.concat(historique_to);
 

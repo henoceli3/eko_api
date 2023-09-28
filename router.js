@@ -36,13 +36,13 @@ router.post("/api/v1/testSepolia", sendCryptoOnSepolia); // TODO supprimer cette
 
 // -------------------------------------------HISTORIQUE---------------------------------------------------
 router.post("/api/v1/getHistorique/eth", (req, res) => {
-  ethereumClasse.getHistotique(req, res);
+  ethereumClasse.getHistorique(req, res);
 });
 router.post("/api/v1/getHistorique/eth_native", (req, res) => {
-  ethereumClasse.getHistotique(req, res);
+  ethereumClasse.getHistorique(req, res);
 });
 router.post("/api/v1/getHistorique/btc_native", (req, res) => {
-  ethereumClasse.getHistotique(req, res);
+  ethereumClasse.getHistorique(req, res);
 });
 
 // ------------------------------------------Balances---------------------------------------------
