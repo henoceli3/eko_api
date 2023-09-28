@@ -1,5 +1,4 @@
 import express from "express";
-import sendCryptoOnSepolia from "./tests/testSepeolia.js";
 import getBlanceBTCNAtive from "./src/routes/v1/Transation/Bitcoin/getBalance.js";
 import ethereumClasse from "./src/routes/v1/Transation/Ethereum/Ethereum_Classe.js";
 import walletGenerator from "./src/routes/v1/wallet/walletClasse.js";
@@ -31,8 +30,6 @@ router.post("/api/v1/send/eth", (req, res) => {
 router.get("/api/v1/getGasPrice", (req, res) => {
   ethereumClasse.getEthereumGasPrice(req, res);
 });
-
-router.post("/api/v1/testSepolia", sendCryptoOnSepolia); // TODO supprimer cette ligne après le test
 
 // -------------------------------------------HISTORIQUE---------------------------------------------------
 router.post("/api/v1/getHistorique/eth", (req, res) => {
