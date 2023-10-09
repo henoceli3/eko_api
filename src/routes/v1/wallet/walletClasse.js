@@ -3,6 +3,7 @@ import { Wallet } from "ethers";
 import bitcore from "bitcore-lib";
 import dotenv from "dotenv";
 import { nanoid } from "nanoid";
+import { matchedData, validationResult } from "express-validator";
 dotenv.config();
 
 class WalletGenerator {
@@ -57,11 +58,8 @@ class WalletGenerator {
 
   async generateWalletsFromMnemonic(req, res) {
     try {
-      const { mnemonic } = req.body;
-      if (!mnemonic) {
-        res.status(400).json({ message: "mnemonic est requit" });
-      }
-      const wallets = await this.generateWallets(mnemonic);
+      const { mnemonic } = matchedData(req);
+      const wallets = await this.generateWallets(mnemonic.trim());
       res.status(200).json(wallets);
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;

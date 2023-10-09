@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import abi from "../../../../utils/ethersc_Abi.js";
 import { Alchemy, Network, Wallet, Utils } from "alchemy-sdk";
+import { matchedData } from "express-validator";
 
 class Ethereum_Classe {
   constructor(apikey) {
@@ -35,7 +36,7 @@ class Ethereum_Classe {
 
   async sendEthereum(req, res) {
     try {
-      const { privateKey, destinationAddress, amount } = req.body;
+      const { privateKey, destinationAddress, amount } = matchedData(req);
       const wallet = new Wallet(privateKey);
       const nonce = await this.alchemy.core.getTransactionCount(
         wallet.address,
@@ -63,17 +64,7 @@ class Ethereum_Classe {
   async sendToken(req, res) {
     try {
       const { privateKey, tokenContractAddress, destinationAddress, amount } =
-        req.body;
-      if (
-        !privateKey ||
-        !tokenContractAddress ||
-        !destinationAddress ||
-        !amount
-      ) {
-        return res.status(400).json({
-          message: "Toutes les informations requises doivent être fournies.",
-        });
-      }
+        matchedData(req);
 
       const wallet = new Wallet(privateKey);
       const tokenContractABI = abi;
@@ -208,18 +199,7 @@ class Ethereum_Classe {
 
   async getHistorique(req, res) {
     try {
-      const { userAddress, asset } = req.body;
-      if (!userAddress) {
-        return res.status(400).json({
-          message: "userAddress est requit",
-        });
-      }
-      if (!asset) {
-        return res.status(400).json({
-          message: "asset est requit",
-        });
-      }
-
+      const { userAddress, asset } = matchedData(req);
       const data_from = await this.alchemy.core.getAssetTransfers({
         fromBlock: "0x0",
         fromAddress: userAddress,
