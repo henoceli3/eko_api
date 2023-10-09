@@ -149,7 +149,10 @@ class Ethereum_Classe {
 
   async getAllBalances(req, res) {
     try {
-      const {userAddress, tokenTable} = matchedData(req);
+      var tokenTable = [{}];
+      var userAddress = {};
+      userAddress = req.body.userAddress;
+      tokenTable = req.body.tokenTable;
       const balancesTable = tokenTable.map(async (token) => {
         if (token.chainId === "eth_native") {
           const balanceHex = await this.alchemy.core.getBalance(
@@ -171,7 +174,7 @@ class Ethereum_Classe {
         }
       });
       const balances = await Promise.all(balancesTable);
-      return res.status(200).json({ solde: balances});
+      return res.status(200).json({ solde: balances });
     } catch (error) {
       const message = `Une erreur est survenue: ${error}`;
       console.log(error);
