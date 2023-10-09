@@ -149,10 +149,7 @@ class Ethereum_Classe {
 
   async getAllBalances(req, res) {
     try {
-      var tokenTable = [{}];
-      var userAddress = {};
-      userAddress = matchedData(req);
-      tokenTable = matchedData(req);
+      const {userAddress, tokenTable} = matchedData(req);
       const balancesTable = tokenTable.map(async (token) => {
         if (token.chainId === "eth_native") {
           const balanceHex = await this.alchemy.core.getBalance(
