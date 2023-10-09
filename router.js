@@ -132,21 +132,9 @@ router.post(
 );
 router.post("/api/v1/getBalance/btc_native", getBlanceBTCNAtive);
 
-router.post(
-  "/api/v1/getAllBalance",
-  [
-    body("tokenTable").notEmpty().escape(),
-    body("userAddress").notEmpty().escape(),
-  ],
-  (req, res) => {
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      res.status(400).json(result);
-    } else {
-      ethereumClasse.getAllBalances(req, res);
-    }
-  }
-);
+router.post("/api/v1/getAllBalance", (req, res) => {
+  ethereumClasse.getAllBalances(req, res);
+});
 
 //----------------------------------globale--------------------------------
 router.post("/api/v1/getPrice", (req, res) => {
