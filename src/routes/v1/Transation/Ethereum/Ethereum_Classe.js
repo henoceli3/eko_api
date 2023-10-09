@@ -174,7 +174,7 @@ class Ethereum_Classe {
         }
       });
       const balances = await Promise.all(balancesTable);
-      return res.status(200).json({ solde: balances });
+      return res.status(200).json({ solde: balances, tokenTable });
     } catch (error) {
       const message = `Une erreur est survenue: ${error}`;
       console.log(error);
