@@ -117,17 +117,7 @@ class Ethereum_Classe {
 
   async getContractBalance(req, res) {
     try {
-      const { tokenContractAddress, userAddress } = req.body;
-      if (!tokenContractAddress) {
-        return res.status(400).json({
-          message: "tokenContractAddress est requit",
-        });
-      }
-      if (!userAddress) {
-        return res.status(400).json({
-          message: "userAddress est requit",
-        });
-      }
+      const { tokenContractAddress, userAddress } = matchedData(req);
 
       const response = await this.alchemy.core.getTokenBalances(userAddress, [
         tokenContractAddress,
@@ -147,12 +137,7 @@ class Ethereum_Classe {
 
   async getBalance(req, res) {
     try {
-      const { userAddress } = req.body;
-      if (!userAddress) {
-        return res.status(400).json({
-          message: "userAddress est requit",
-        });
-      }
+      const { userAddress } = matchedData(req);
       const balanceHex = await this.alchemy.core.getBalance(userAddress);
       const balanceEther = Utils.formatUnits(balanceHex, "ether");
       return res.status(200).json({ solde: balanceEther });
@@ -166,8 +151,8 @@ class Ethereum_Classe {
     try {
       var tokenTable = [{}];
       var userAddress = {};
-      userAddress = req.body.userAddress;
-      tokenTable = req.body.tokenTable;
+      userAddress = matchedData(req);
+      tokenTable = matchedData(req);
       const balancesTable = tokenTable.map(async (token) => {
         if (token.chainId === "eth_native") {
           const balanceHex = await this.alchemy.core.getBalance(
