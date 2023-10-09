@@ -135,8 +135,8 @@ router.post("/api/v1/getBalance/btc_native", getBlanceBTCNAtive);
 router.post(
   "/api/v1/getAllBalance",
   [
-    body("tokenTable").isArray().notEmpty().escape(),
-    body("userAddress").isObject().notEmpty().escape(),
+    body("tokenTable").notEmpty().escape(),
+    body("userAddress").notEmpty().escape(),
   ],
   (req, res) => {
     const result = validationResult(req);
