@@ -4,6 +4,7 @@ import ethereumClasse from "./src/routes/v1/Transation/Ethereum/Ethereum_Classe.
 import walletGenerator from "./src/routes/v1/wallet/walletClasse.js";
 import global from "./src/routes/v1/globale/globalClasse.js";
 import { body, validationResult } from "express-validator";
+import users from "./src/routes/v2/users/users.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -152,5 +153,24 @@ router.get("/api/v1/getTopList", (req, res) => {
 router.post("/api/v1/termsUse", (req, res) => {
   global.termsUse(req, res);
 });
+
+// --------------------------------Users--------------------------------
+router.post(
+  "/api/v1/createUser",
+  [
+    body("nom").notEmpty().isString().escape(),
+    body("prenom").notEmpty().isString().escape(),
+    body("email").notEmpty().isEmail().escape(),
+    body("mdp").isString().escape()
+  ],
+  (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(400).json(result);
+    } else {
+      users.createUser(req, res);
+    }
+  }
+);
 
 export default router;

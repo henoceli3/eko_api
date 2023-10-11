@@ -20,7 +20,7 @@ class WalletGenerator {
 
   generateBitcoinWallet(mnemonic) {
     const bitcoinMnemonic = bip39.mnemonicToSeedSync(mnemonic).toString("hex");
-    const bitcoinRootKey = bitcore.HDPrivateKey.fromSee(
+    const bitcoinRootKey = bitcore.HDPrivateKey.fromSeed(
       bitcore.crypto.Hash.sha256(Buffer.from(bitcoinMnemonic, "hex"))
     );
     const bitcoinDerivedKey = bitcoinRootKey.derive("m/0'/0'/0'/0/0");

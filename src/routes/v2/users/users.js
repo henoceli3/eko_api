@@ -1,14 +1,24 @@
 import { matchedData } from "express-validator";
 import { models } from "../../../db/sequelize.js";
 import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
 
 class Users {
   async createUser(req, res) {
     try {
-      const { user } = matchedData(req);
-      const hash = await bcrypt.hash(user.mdp, 10);
-      user.mdp = hash;
-      const newUser = await models.utilisatueur.create(user);
+      const { nom, prenom, email } = matchedData(req);
+      let { mdp } = matchedData(req);
+      const hash = await bcrypt.hash(mdp, 10);
+      mdp = hash;
+      const newUser = await models.utilisatueur.create({
+        uuid: uuidv4(),
+        nom,
+        prenom,
+        email,
+        mdp,
+        created_at: new Date().toISOString(),
+        line_state: 0,
+      });
       return res.status(200).json(`Utilisateur ${newUser.id} a bien été créé`);
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;
@@ -74,3 +84,6 @@ class Users {
     } catch (error) {}
   }
 }
+
+const users = new Users();
+export default users;

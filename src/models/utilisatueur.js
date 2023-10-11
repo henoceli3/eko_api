@@ -1,3 +1,4 @@
+import Sequelize from 'sequelize';
 export default function(sequelize, DataTypes) {
   return sequelize.define('utilisatueur', {
     id: {
