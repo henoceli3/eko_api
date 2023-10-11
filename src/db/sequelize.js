@@ -29,7 +29,7 @@ const initDb = async () => {
   }
 };
 
-export default {
+export {
   initDb,
   models,
 };

@@ -1,4 +1,3 @@
-import { Sequelize as _Sequelize } from 'sequelize';
 export default function(sequelize, DataTypes) {
   return sequelize.define('portefeuille', {
     id: {
@@ -7,43 +6,30 @@ export default function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    uuid: {
+      type: DataTypes.STRING(50),
+      allowNull: false
+    },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'utilisateur',
-        key: 'id'
-      }
+      allowNull: false
     },
-    blockchain_id: {
+    nom: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
+    mnemonic: {
+      type: DataTypes.STRING(250),
+      allowNull: false
+    },
+    line_state: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'blockchain',
-        key: 'id'
-      }
-    },
-    public_key: {
-      type: DataTypes.STRING(255),
       allowNull: false
-    },
-    private_key: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    address: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: _Sequelize.fn('current_timestamp')
     }
   }, {
     sequelize,
     tableName: 'portefeuille',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",
@@ -58,13 +44,6 @@ export default function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "user_id" },
-        ]
-      },
-      {
-        name: "blockchain_id",
-        using: "BTREE",
-        fields: [
-          { name: "blockchain_id" },
         ]
       },
     ]

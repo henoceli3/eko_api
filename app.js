@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import router from "./router.js";
 import dotenv from "dotenv";
+import { initDb } from "./src/db/sequelize.js";
 dotenv.config();
 
 //appelle de express()
@@ -18,8 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //connexion a la base de données
-// sequelize.initDb();
-
+initDb();
 
 // routes
 app.use("/", router);

@@ -1,37 +1,39 @@
-import { Sequelize as _Sequelize } from 'sequelize';
 export default function(sequelize, DataTypes) {
-  return sequelize.define('utilisateur', {
+  return sequelize.define('utilisatueur', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
+    uuid: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     nom: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(50),
+      allowNull: false
+    },
+    prenom: {
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     email: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(100),
       allowNull: false
     },
-    phrase_de_sauvegarde: {
-      type: DataTypes.TEXT,
+    mdp: {
+      type: DataTypes.STRING(50),
       allowNull: false
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: _Sequelize.fn('current_timestamp')
-    },
-    prenom: {
-      type: DataTypes.STRING(255),
+    line_state: {
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'utilisateur',
-    timestamps: false,
+    tableName: 'utilisatueur',
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",
