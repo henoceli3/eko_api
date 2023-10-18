@@ -1,22 +1,31 @@
 import { matchedData } from "express-validator";
 import { models } from "../../../db/sequelize.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
+import dotenv from "dotenv";
+dotenv.config();
 
 class Users {
   async createUser(req, res) {
     try {
       const { nom, prenom, email } = matchedData(req);
       let { mdp } = matchedData(req);
+      const existEmail = await models.utilisatueur.findOne({
+        where: { email },
+      });
+      if (existEmail) {
+        const message = "Cet email est déjà utilisé";
+        return res.status(409).json({ message });
+      }
       const hash = await bcrypt.hash(mdp, 10);
-      mdp = hash;
       const newUser = await models.utilisatueur.create({
+        id: 0,
         uuid: uuidv4(),
-        nom,
-        prenom,
-        email,
-        mdp,
-        created_at: new Date().toISOString(),
+        nom: nom,
+        prenom: prenom,
+        email: email,
+        mdp: hash,
         line_state: 0,
       });
       return res.status(200).json(`Utilisateur ${newUser.id} a bien été créé`);
@@ -26,11 +35,16 @@ class Users {
     }
   }
 
-  async getUserById(req, res) {
+  async getUserByUuid(req, res) {
     try {
-      const { id } = matchedData(req);
-      const user = await models.utilisatueur.findByPk(id);
-      return res.status(200).json(user);
+      const { uuid } = matchedData(req);
+      const user = await models.utilisatueur.findByPk(uuid);
+      return res.status(200).json({
+        uuid: user.uuid,
+        nom: user.nom,
+        prenom: user.prenom,
+        email: user.email,
+      });
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;
       return res.status(500).json({ message });
@@ -40,7 +54,16 @@ class Users {
   async geAlltUsers(req, res) {
     try {
       const users = await models.utilisatueur.findAll();
-      return res.status(200).json(users);
+      return res.status(200).json({
+        users: users.map((user) => {
+          return {
+            uuid: user.uuid,
+            nom: user.nom,
+            prenom: user.prenom,
+            email: user.email,
+          };
+        }),
+      });
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;
       return res.status(500).json({ message });
@@ -78,10 +101,28 @@ class Users {
     try {
       const { mdp, email } = matchedData(req);
       const user = await models.utilisatueur.findOne({
-        where: { mdp, email },
+        where: { email: email, line_state: 0 },
       });
-      return res.status(200).json(user);
-    } catch (error) {}
+      if (!user) {
+        res.status(401).json({ message: "Aucun utilsateur trouvé" });
+      }
+      await bcrypt.compare(mdp, user.mdp).then((isPasswordValid) => {
+        if (!isPasswordValid) {
+          const message = "Mot de passe invalide";
+          return res.status(404).json({ message });
+        }
+        const token = jwt.sign(
+          { userUuid: user.uuid },
+          process.env.PRIVATE_KEY || "dvdfbgfnbv",
+          { expiresIn: "7d" }
+        );
+        const message = "Connexion reussie";
+        res.status(200).json({ message, uuid: user.uuid, token, isMdpValid });
+      });
+    } catch (error) {
+      const message = `Une erreur est survenue : ${error}`;
+      return res.status(500).json({ message });
+    }
   }
 }
 

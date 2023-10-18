@@ -6,7 +6,6 @@ function initModels(sequelize) {
   var portefeuille = _portefeuille(sequelize, DataTypes);
   var utilisatueur = _utilisatueur(sequelize, DataTypes);
 
-
   return {
     portefeuille,
     utilisatueur,

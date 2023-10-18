@@ -1,16 +1,28 @@
 import express from "express";
-import getBlanceBTCNAtive from "./src/routes/v1/Transation/Bitcoin/getBalance.js";
-import ethereumClasse from "./src/routes/v1/Transation/Ethereum/Ethereum_Classe.js";
-import walletGenerator from "./src/routes/v1/wallet/walletClasse.js";
-import global from "./src/routes/v1/globale/globalClasse.js";
-import { body, validationResult } from "express-validator";
-import users from "./src/routes/v2/users/users.js";
+import getBlanceBTCNAtive from "./Transation/Bitcoin/getBalance.js";
+import ethereumClasse from "./Transation/Ethereum/Ethereum_Classe.js";
+import walletGenerator from "./wallet/walletClasse.js";
+import global from "./globale/globalClasse.js";
+import { body, param, validationResult } from "express-validator";
+import users from "../v2/users/users.js";
+import auth from "../../authentification/auth.js";
+
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.json("Bienvenue sur EKO Wallet");
+  res.json({
+    nom: "Eko wallet",
+    versionActuelle: "2.0.0",
+    linkV1: "http://localhost:4000/v1/",
+    linkV2: "http://localhost:4000/v2/",
+  });
 });
-
+router.get("/v1/", (req, res) => {
+  res.json({ nom: "Eko wallet V1", version: "1.0.0" });
+});
+router.get("/v2/", (req, res) => {
+  res.json({ nom: "Eko wallet V2", version: "2.0.0" });
+});
 // ------------------------------------------WALLET----------------------------
 router.get("/api/v1/getSecretPhrase", (req, res) => {
   walletGenerator.getMnemonic(req, res);
@@ -156,12 +168,13 @@ router.post("/api/v1/termsUse", (req, res) => {
 
 // --------------------------------Users--------------------------------
 router.post(
-  "/api/v1/createUser",
+  "/api/v2/createUser",
   [
     body("nom").notEmpty().isString().escape(),
     body("prenom").notEmpty().isString().escape(),
     body("email").notEmpty().isEmail().escape(),
-    body("mdp").isString().escape()
+    body("mdp").isString().escape(),
+    // auth,
   ],
   (req, res) => {
     const result = validationResult(req);
@@ -169,6 +182,39 @@ router.post(
       res.status(400).json(result);
     } else {
       users.createUser(req, res);
+    }
+  }
+);
+
+router.get(
+  "/api/v2/getUserById/:id",
+  [param("id").notEmpty().escape(), auth],
+  (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(400).json(result);
+    } else {
+      users.getUserByUuid(req, res);
+    }
+  }
+);
+
+router.get("/api/v2/getAllUsers/", auth, (req, res) => {
+  users.geAlltUsers(req, res);
+});
+
+router.post(
+  "/api/v2/login/",
+  [
+    body("email").notEmpty().isEmail().escape(),
+    body("mdp").isString().escape(),
+  ],
+  (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(400).json(result);
+    } else {
+      users.login(req, res);
     }
   }
 );
