@@ -26,11 +26,15 @@ export default function (sequelize, DataTypes) {
         allowNull: false,
       },
       mdp: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
       line_state: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      resetTken : {
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
     },

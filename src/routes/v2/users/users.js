@@ -3,10 +3,18 @@ import { models } from "../../../db/sequelize.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
 class Users {
+  /**
+   * Creates a new user.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @return {Object} The response object.
+   */
   async createUser(req, res) {
     try {
       const { nom, prenom, email } = matchedData(req);
@@ -38,7 +46,9 @@ class Users {
   async getUserByUuid(req, res) {
     try {
       const { uuid } = matchedData(req);
-      const user = await models.utilisatueur.findByPk(uuid);
+      const user = await models.utilisatueur.findOne({
+        where: { uuid },
+      });
       return res.status(200).json({
         uuid: user.uuid,
         nom: user.nom,
@@ -57,6 +67,7 @@ class Users {
       return res.status(200).json({
         users: users.map((user) => {
           return {
+            id: user.id,
             uuid: user.uuid,
             nom: user.nom,
             prenom: user.prenom,
@@ -70,27 +81,48 @@ class Users {
     }
   }
 
-  async updateUserById(req, res) {
+  async updateUserNameAndPrenom(req, res) {
     try {
-      const { id } = matchedData(req);
-      const { user } = matchedData(req);
-      const updatedUser = await models.utilisatueur.update(user, {
-        where: { id },
-      });
-      return res.status(200).json(updatedUser);
+      const { uuid, nom, prenom } = matchedData(req);
+      const updatedUser = await models.utilisatueur.update(
+        { nom: nom, prenom: prenom },
+        {
+          where: { uuid: uuid, line_state: 0 },
+        }
+      );
+      const message =
+        "Le nom et le prenom de l'utilisateur on bien été mis à jour";
+      return res.status(200).json({ message, uuid: updatedUser.uuid });
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;
       return res.status(500).json({ message });
     }
   }
 
-  async deleteUserById(req, res) {
+  async deleteUserByUuid(req, res) {
     try {
-      const { id } = matchedData(req);
-      const deletedUser = await models.utilisatueur.destroy({
-        where: { id },
+      const { uuid, mdp } = matchedData(req);
+      const user = await models.utilisatueur.findOne({
+        where: { uuid: uuid, line_state: 0 },
       });
-      return res.status(200).json(deletedUser);
+      if (!user) {
+        const message = "Cet utilisateur n'existe pas";
+        return res.status(404).json({ message });
+      }
+      await bcrypt.compare(mdp, user.mdp).then(async (isPasswordValid) => {
+        if (!isPasswordValid) {
+          const message = "Mot de passe invalide";
+          return res.status(404).json({ message });
+        }
+        const deletedUser = await models.utilisatueur.update(
+          { line_state: 1 },
+          {
+            where: { uuid: uuid },
+          }
+        );
+        const message = "Votre compte a été supprimé";
+        return res.status(200).json({ message, uuid: deletedUser.uuid });
+      });
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;
       return res.status(500).json({ message });
@@ -117,8 +149,52 @@ class Users {
           { expiresIn: "7d" }
         );
         const message = "Connexion reussie";
-        res.status(200).json({ message, uuid: user.uuid, token, isMdpValid });
+        res.status(200).json({ message, uuid: user.uuid, token });
       });
+    } catch (error) {
+      const message = `Une erreur est survenue : ${error}`;
+      return res.status(500).json({ message });
+    }
+  }
+
+  async forgotPassword(req, res) {
+    try {
+      const { email } = req.body;
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        host: process.env.STMP_HOST || "smtp.gmail.com",
+        port: process.env.STMP_PORT || 587,
+        secure: false,
+        auth: {
+          user: process.env.STMP_USER || "helitako16@gmail",
+          pass: process.env.STMP_PASS || "eorqyfllrrmidyxo",
+        },
+      });
+      const user = await models.utilisatueur.findOne({
+        where: { email: email },
+      });
+      if (!user) {
+        res.status(400).json({ message: "Utilisateur introuvable" });
+        return;
+      }
+      const resetToken = jwt.sign(
+        { email },
+        process.env.PRIVATE_KEY || "dvdfbgfnbv",
+        { expiresIn: "24h" }
+      );
+      user.resetToken = resetToken;
+      await user.save();
+      const resetLink = `http://localhost:${process.env.PORT}/components/authentication/reset-password/?token=${resetToken}`;
+      const mailOptions = {
+        from: "Eko Wallet <helitako16@gmail.com>",
+        to: email,
+        subject: "Réinitialisation du mot de passe",
+        text: `ouvrez l'adresse suivante pour changer votre mot de passe: ${resetLink}`,
+      };
+      await transporter.sendMail(mailOptions);
+
+      const message = "Email de réinitialisation envoyé avec succes";
+      res.status(200).json({ message });
     } catch (error) {
       const message = `Une erreur est survenue : ${error}`;
       return res.status(500).json({ message });

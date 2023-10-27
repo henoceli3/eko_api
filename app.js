@@ -3,7 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { initDb } from "./src/db/sequelize.js";
-import router from "./src/routes/v1/router.js";
+import router from "./router.js";
 dotenv.config();
 
 //appelle de express()

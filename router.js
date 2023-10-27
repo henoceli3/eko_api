@@ -1,11 +1,13 @@
 import express from "express";
-import getBlanceBTCNAtive from "./Transation/Bitcoin/getBalance.js";
-import ethereumClasse from "./Transation/Ethereum/Ethereum_Classe.js";
-import walletGenerator from "./wallet/walletClasse.js";
-import global from "./globale/globalClasse.js";
+import getBlanceBTCNAtive from "./src/routes/v1/Transation/Bitcoin/getBalance.js";
+import ethereumClasse from "./src/routes/v1/Transation/Ethereum/Ethereum_Classe.js";
+import walletGenerator from "./src/routes/v1/wallet/walletClasse.js";
+import global from "./src/routes/v1/globale/globalClasse.js";
 import { body, param, validationResult } from "express-validator";
-import users from "../v2/users/users.js";
-import auth from "../../authentification/auth.js";
+import users from "./src/routes/v2/users/users.js";
+import auth from "./src/authentification/auth.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const router = express.Router();
 
@@ -57,7 +59,7 @@ router.post(
     if (!result.isEmpty()) {
       res.status(400).json(result);
     } else {
-      ethereumClasse.sendToken(req, res);
+      ethereumClasse.sendEthereum(req, res);
     }
   }
 );
@@ -168,6 +170,22 @@ router.post("/api/v1/termsUse", (req, res) => {
 
 // --------------------------------Users--------------------------------
 router.post(
+  "/api/v2/login/",
+  [
+    body("email").notEmpty().isEmail().escape(),
+    body("mdp").isString().escape(),
+  ],
+  (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(400).json(result);
+    } else {
+      users.login(req, res);
+    }
+  }
+);
+
+router.post(
   "/api/v2/createUser",
   [
     body("nom").notEmpty().isString().escape(),
@@ -187,8 +205,8 @@ router.post(
 );
 
 router.get(
-  "/api/v2/getUserById/:id",
-  [param("id").notEmpty().escape(), auth],
+  "/api/v2/getUserById/:uuid",
+  [param("uuid").notEmpty().escape(), auth],
   (req, res) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
@@ -204,17 +222,51 @@ router.get("/api/v2/getAllUsers/", auth, (req, res) => {
 });
 
 router.post(
-  "/api/v2/login/",
+  "/api/v2/deletUserByUuid/",
   [
-    body("email").notEmpty().isEmail().escape(),
-    body("mdp").isString().escape(),
+    body("uuid").notEmpty().isString().escape(),
+    body("mdp").notEmpty().isString().escape(),
+    auth,
   ],
   (req, res) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
       res.status(400).json(result);
     } else {
-      users.login(req, res);
+      users.deleteUserByUuid(req, res);
+    }
+  }
+);
+
+router.post(
+  "/api/v2/updateUserNameAndPrenom/",
+  [
+    body("uuid").notEmpty().isString().escape(),
+    body("nom").isString().escape(),
+    body("prenom").isString().escape(),
+    auth,
+  ],
+  (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(400).json(result);
+    } else {
+      users.updateUserNameAndPrenom(req, res);
+    }
+  }
+);
+
+router.post(
+  "/api/v2/forgetPassword",
+  [
+    body("email").notEmpty().isEmail().escape(),
+  ],
+  (req, res) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(400).json(result);
+    } else {
+      users.forgotPassword(req, res);
     }
   }
 );
