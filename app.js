@@ -19,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //connexion a la base de données
-initDb();
+// initDb();
 
 // routes
 app.use("/", router);
